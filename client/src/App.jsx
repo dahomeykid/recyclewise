@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import { RecycleWiseProvider } from './context/RecycleWiseContext'
-import Footer from './components/Footer'
-import Navbar from './components/Navbar'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import { RecycleWiseProvider } from "./context/RecycleWiseContext";
+import Footer from "./components/Footer";
+import Navbar from "./components/Navbar";
+import LeaderBoard from "./pages/LeaderBoard";
 
 function App() {
-
-  return (
+	return (
 		<Router>
 			<RecycleWiseProvider>
 				<Navbar />
@@ -18,7 +18,10 @@ function App() {
 					/>
 					{/* <Route path="/service" element={<Service />} /> */}
 					{/* <Route path="/admin" element={<Admin />} /> */}
-					{/* <Route path="/quiz" element={<Quiz />} /> */}
+					<Route
+						path='/leaderboard'
+						element={<LeaderBoard />}
+					/>
 					{/* Add more routes as needed */}
 				</Routes>
 				<Footer />
@@ -27,4 +30,4 @@ function App() {
 	);
 }
 
-export default App
+export default App;
