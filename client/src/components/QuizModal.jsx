@@ -1,36 +1,40 @@
-import React, { useState } from "react";
-
-const questions = [
-	{
-		question: "What is the capital of France?",
-		options: ["Madrid", "Berlin", "Paris", "Lisbon"],
-		answer: 2,
-	},
-	{
-		question: "Which language is used for web development?",
-		options: ["Python", "HTML", "C", "Java"],
-		answer: 1,
-	},
-	{
-		question: "What does CSS stand for?",
-		options: [
-			"Computer Style Sheets",
-			"Creative Style System",
-			"Cascading Style Sheets",
-			"Colorful Style Syntax",
-		],
-		answer: 2,
-	},
-];
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useRecycleWise } from "../context/RecycleWiseContext.jsx";
 
 const QuizModal = ({ onClose }) => {
 	const [currentQ, setCurrentQ] = useState(0);
 	const [score, setScore] = useState(0);
 	const [showScore, setShowScore] = useState(false);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const [questions, setQuestions] = useState([]);
+	const [loading, setLoading] = useState(true);
 
-	const handleAnswer = (index) => {
-		const isCorrect = index === questions[currentQ].answer;
+	const { API_URL } = useRecycleWise();
+	const SLICE_MAXIMUM = 20; // Maximum number of questions to slice from the API
+	const SLICE_LENGTH = 5; // Number of questions to display at a time
+
+	useEffect(() => {
+		const fetchQuestions = async () => {
+			try {
+				const response = await axios.get(`${API_URL}/quiz`);
+				// Assuming the response contains the quiz data in the expected format
+				const startIndex = Math.floor(Math.random() * SLICE_MAXIMUM); // Randomly select a starting index between 0 and SLICE_MAXIMUM
+
+				const endIndex = startIndex + SLICE_LENGTH; // Get the next SLICE_LENGTH questions
+
+				setQuestions(response.data.slice(startIndex, endIndex)); // Uncomment this line if you want to fetch questions from the server
+			} catch (error) {
+				console.error("Error fetching quiz data:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchQuestions();
+	}, []);
+
+	const handleAnswer = (option) => {
+		const isCorrect = option === questions[currentQ].answer;
 		if (isCorrect) setScore((prev) => prev + 1);
 
 		setIsAnimating(true);
@@ -69,8 +73,9 @@ const QuizModal = ({ onClose }) => {
 				>
 					×
 				</button>
-
-				{!showScore ? (
+				{loading ? (
+					<p className='text-center text-gray-600'>Loading questions...</p>
+				) : !showScore ? (
 					<>
 						<h2 className='text-xl font-semibold text-blue-800 mb-4'>
 							Question {currentQ + 1} of {questions.length}
@@ -84,7 +89,7 @@ const QuizModal = ({ onClose }) => {
 								<button
 									key={index}
 									className='w-full bg-blue-100 hover:bg-blue-200 text-blue-900 font-medium py-2 px-4 rounded-lg transition duration-200'
-									onClick={() => handleAnswer(index)}
+									onClick={() => handleAnswer(option)}
 								>
 									{option}
 								</button>
@@ -97,8 +102,8 @@ const QuizModal = ({ onClose }) => {
 							Quiz Completed!
 						</h2>
 						<p className='text-lg text-gray-700 mb-6'>
-							You scored <span className='font-bold'>{score}</span> out of{" "}
-							{questions.length}.
+							You scored <span className='font-bold'>{score*10}</span> out of{" "}
+							{questions.length * 10}.
 						</p>
 						<div className='flex justify-center gap-4'>
 							<button

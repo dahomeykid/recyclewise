@@ -10,8 +10,9 @@ export const getQuiz = async (req, res) => {
 
 		// Read the quiz.json file
 		const data = await fs.readFile(quizFilePath, "utf8");
+
 		const quizData = JSON.parse(data); // Parse the JSON data
-        
+
 		// Send the quiz data to the client
 		res.status(200).json(quizData);
 	} catch (error) {
@@ -19,3 +20,5 @@ export const getQuiz = async (req, res) => {
 		res.status(500).json({ error: "Failed to retrieve quiz data" });
 	}
 };
+
+
