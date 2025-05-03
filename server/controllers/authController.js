@@ -12,75 +12,30 @@ const createToken = (user) => {
 };
 
 export const register = asyncHandler(async (req, res) => {
-  const { firstName, lastName, username, email, password } = req.body;
+	const { username, email, password } = req.body;
 
-  const existing = await User.findOne({
-    $or: [{ email }, { username }],
-  });
-  if (existing) {
-    throw new ErrorResponse('Email or username already in use', 400);
-  }
+	const existingUser = await User.findOne({ email });
+	if (existingUser) {
+		return res.status(400).json({ message: "Email already in use" });
+	}
 
-  const user = await User.create({
-    firstName,
-    lastName,
-    username,
-    email,
-    password,
-  });
+	const user = await User.create({ username, email, password });
+	const token = createToken(user);
 
-  const token = createToken(user);
-
-  res.cookie('token', token, {
-    httpOnly: true,
-    sameSite: 'Strict',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  res.status(201).json({
-    user: {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-    },
-  });
+	res.status(201).json({ token, user: { id: user._id, username, email } });
 });
 
+// Login a user
 export const login = asyncHandler(async (req, res) => {
-  const { identifier, password } = req.body;
+  const { email, password } = req.body;
 
-  const user = await User.findOne({
-    $or: [{ username: identifier }, { email: identifier }],
-  });
-
+  const user = await User.findOne({ email });
   if (!user || !(await user.comparePassword(password))) {
-    throw new ErrorResponse('Invalid credentials', 401);
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   const token = createToken(user);
-
-  res.cookie('token', token, {
-    httpOnly: true,
-    sameSite: 'Strict',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000,
-  });
-
-  res.status(200).json({
-    user: {
-      id: user._id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-    },
-  });
-});
-
-export const logout = asyncHandler(async (req, res) => {
-  res.clearCookie('token');
-  res.status(200).json({ message: 'Logout successful' });
+  res.status(200).json({ token, user: { id: user._id, username: user.username, email } });
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
