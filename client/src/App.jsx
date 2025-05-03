@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -8,6 +8,25 @@ import Admin from "./pages/Admin";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AuthenticatedUser from "./components/AuthenticatedUser";
+
+import { useRecycleWise } from "./context/RecycleWiseContext";
+
+
+const ProtectedRoute = ({ children }) => {
+	const { isAuthenticated } = useRecycleWise();
+
+	if (!isAuthenticated) {
+		return (
+			<Navigate
+				to='/login'
+				replace
+			/>
+		);
+	}
+
+	return children;
+};
+
 
 function App() {
 	return (
@@ -26,7 +45,11 @@ function App() {
 						/>
 						<Route
 							path='/admin'
-							element={<Admin />}
+							element={
+							<ProtectedRoute>
+							<Admin />
+							</ProtectedRoute>
+							}
 						/>
 						<Route
 							path='/leaderboard'

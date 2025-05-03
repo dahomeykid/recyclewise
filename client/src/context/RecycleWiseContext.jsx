@@ -1,8 +1,16 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const RecycleWiseContext = createContext();
 
 export const RecycleWiseProvider = ({ children }) => {
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    
+    useEffect(() => {
+			const token = localStorage.getItem("token");
+			setIsAuthenticated(!!token); // Set authentication status based on token
+		}, []);
 
     // Add any other state or functions you want to provide to your components
     // For example, you might want to manage user authentication state, etc.
@@ -16,7 +24,7 @@ export const RecycleWiseProvider = ({ children }) => {
 
     return (
         <RecycleWiseContext.Provider value={{ 
-        // isAuthenticated,
+        isAuthenticated,
         // isAdmin,
         // login,
         // logout,

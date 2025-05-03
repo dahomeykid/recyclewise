@@ -65,7 +65,7 @@ const Login = () => {
 							name='email'
 							value={formData.email}
 							onChange={handleInputChange}
-							className='w-full border border-gray-300 p-2 rounded'
+							className='text-black w-full border border-gray-300 p-2 rounded'
 							required
 						/>
 					</div>
@@ -82,17 +82,16 @@ const Login = () => {
 							name='password'
 							value={formData.password}
 							onChange={handleInputChange}
-							className='w-full border border-gray-300 p-2 rounded'
+							className='text-black w-full border border-gray-300 p-2 rounded'
 							required
 						/>
 					</div>
-					<Link
-						to='/'
+					<button
 						type='submit'
 						className='block text-center w-full bg-green-600 text-white py-2 rounded hover:bg-green-800'
 					>
 						Login
-					</Link>
+					</button>
 				</form>
 				<p className='mt-4 text-center text-gray-600'>
 					Don't have an account?{" "}

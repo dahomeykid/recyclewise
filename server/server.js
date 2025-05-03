@@ -20,6 +20,7 @@ app.use(cors({
   credentials: true               // ✅ Allow cookies to be sent with requests
 }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false })); // For parsing application/x-www-form-urlencoded
 
 app.get('/', (req, res) => {
   res.send('Server is running');

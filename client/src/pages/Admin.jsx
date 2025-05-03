@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRecycleWise } from "../context/RecycleWiseContext.jsx";
 
 const Admin = () => {
 	const [events, setEvents] = useState([]);
@@ -14,10 +15,12 @@ const Admin = () => {
 	});
 	const [editingEventId, setEditingEventId] = useState(null);
 
+	const	{API_URL} = useRecycleWise()
+
 	// Fetch events from the server
 	useEffect(() => {
 		const fetchEvents = async () => {
-			const response = await fetch("/api/events");
+			const response = await fetch(`${API_URL}/events`);
 			const data = await response.json();
 			setEvents(data);
 		};
@@ -33,7 +36,7 @@ const Admin = () => {
 	// Function to send email
 	const sendEmail = async (eventData) => {
 		try {
-			const response = await fetch("/api/send-email", {
+			const response = await fetch(`${API_URL}/send-email`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(eventData),
