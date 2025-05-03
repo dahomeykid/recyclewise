@@ -1,42 +1,63 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import {jwtDecode} from "jwt-decode";
 
 const RecycleWiseContext = createContext();
 
 export const RecycleWiseProvider = ({ children }) => {
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [user, setUser] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem('token') || null); // State to store the token
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const decodeToken = () => {
+		if (!token) return null;
 
-    
-    useEffect(() => {
-			const token = localStorage.getItem("token");
-			setIsAuthenticated(!!token); // Set authentication status based on token
-		}, []);
+		try {
+			const decoded = jwtDecode(token);
+			return decoded; // Returns the payload (e.g., { id, username, email, role})
+		} catch (error) {
+			console.error("Invalid token:", error);
+			return null;
+		}
+	};
 
-    // Add any other state or functions you want to provide to your components
-    // For example, you might want to manage user authentication state, etc.
-    // const [user, setUser] = useState(null);
-    // const login = (userData) => setUser(userData);
-    // const logout = () => setUser(null);
-    // const isAuthenticated = !!user;
-    // const isAdmin = user?.role === 'admin'; // Example of checking if the user is an admin
+	useEffect(() => {
+		const decoded = decodeToken();
+		if (decoded) {
+			setUser({
+				id: decoded.id,
+				username: decoded.username,
+				email: decoded.email,
+			});
+		}
+	}, []);
 
-    const API_URL = import.meta.env.VITE_API_URL
+	useEffect(() => {
+		setIsAuthenticated(!!token); // Set authentication status based on token
+	}, [token]);
 
-    return (
-        <RecycleWiseContext.Provider value={{ 
-        isAuthenticated,
-        // isAdmin,
-        // login,
-        // logout,
-        // user,
-        API_URL,
-        // Add any other context values you want to provide here
-         }}>
-        {children}
-        </RecycleWiseContext.Provider>
+	// Add any other state or functions you want to provide to your components
+	// For example, you might want to manage user authentication state, etc.
+	// const login = (userData) => setUser(userData);
+	// const logout = () => setUser(null);
+	// const isAuthenticated = !!user;
+	// const isAdmin = user?.role === 'admin'; // Example of checking if the user is an admin
 
-    );
-}  
+	const API_URL = import.meta.env.VITE_API_URL;
+
+	return (
+		<RecycleWiseContext.Provider
+			value={{
+				isAuthenticated,
+                token,
+                setToken, // Function to update the token
+				user,
+				API_URL,
+				// Add any other context values you want to provide here
+			}}
+		>
+			{children}
+		</RecycleWiseContext.Provider>
+	);
+};
 
 export const useRecycleWise = () => useContext(RecycleWiseContext);
-

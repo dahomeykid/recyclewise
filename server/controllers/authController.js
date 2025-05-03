@@ -4,7 +4,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 
 const createToken = (user) => {
 	return jwt.sign(
-		{ id: user._id, username: user.username, role: user.role },
+		{ id: user._id, username: user.username, email: user.email, role: user.role },
 		process.env.JWT_SECRET,
 		{ expiresIn: "1d" }
 	);
@@ -21,7 +21,7 @@ export const register = asyncHandler(async (req, res) => {
 	const user = await User.create({ username, email, password });
 	const token = createToken(user);
 
-	res.status(201).json({ token, user: { id: user._id, username, email } });
+	res.status(201).json({ token});
 });
 
 // Login a user
@@ -36,7 +36,7 @@ export const login = asyncHandler(async (req, res) => {
 	const token = createToken(user);
 	res
 		.status(200)
-		.json({ token, user: { id: user._id, username: user.username, email } });
+		.json({ token});
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {

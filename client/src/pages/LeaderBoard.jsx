@@ -1,8 +1,11 @@
 import { useState } from "react";
 import QuizModal from "../components/QuizModal";
+import { useRecycleWise } from "../context/RecycleWiseContext"; 
 
 const LeaderBoard = () => {
 	const [showModal, setShowModal] = useState(false);
+	const {user} = useRecycleWise(); // Assuming you have a context to get user data
+	// const { isAuthenticated, user } = useRecycleWise(); // Adjust the import based on your context structure
 	// Sample data for users and their scores
 	const users = [
 		{ id: 1, name: "Alice", score: 150 },
@@ -20,7 +23,9 @@ const LeaderBoard = () => {
 
 			<div className='min-h-screen bg-gray-100 flex flex-col gap-6 items-center justify-center p-4'>
 				<div className='bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6'>
+		
 					{/* Play the Game Button */}
+					{user ? ( // Check if user is authenticated
 					<div className='text-center mb-6'>
 						<p className='text-2xl text-gray-800 my-4'>Are you eco-savvy ?</p>
 						<button
@@ -30,7 +35,19 @@ const LeaderBoard = () => {
 							Take the Quiz ?!
 						</button>
 					</div>
-				</div>
+					) : (
+					<div className='text-center mb-6'>
+						<p className='text-2xl text-gray-800 my-4'>Please login to play the game</p>
+						<button
+							onClick={() => setShowModal(true)} // turn on the modal
+							className='bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition'
+						>
+							Login
+						</button>
+					</div>
+						)
+					}
+					</div>
 				<div className='bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6'>
 					<h1 className='text-3xl font-bold text-center text-gray-800 mb-6'>
 						🏆 Leaderboard

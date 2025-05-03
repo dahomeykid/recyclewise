@@ -10,7 +10,7 @@ const QuizModal = ({ onClose }) => {
 	const [questions, setQuestions] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-	const { API_URL } = useRecycleWise();
+	const { API_URL, user, token } = useRecycleWise();
 	const SLICE_MAXIMUM = 20; // Maximum number of questions to slice from the API
 	const SLICE_LENGTH = 5; // Number of questions to display at a time
 
@@ -54,6 +54,30 @@ const QuizModal = ({ onClose }) => {
 		setShowScore(false);
 		setIsAnimating(false);
 	};
+
+	const handleSave = async () => {
+		const userId = user.id; // Assuming you have the user ID from the context
+		const quizData = {
+			userId,
+			score: score * 10, // Assuming you want to save the score out of 100
+		};
+
+		await axios.put(`${API_URL}/leaderboard`, quizData, {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`, // Assuming you have the token in the context
+			},
+		}
+		)
+			.then((response) => {
+				console.log("Quiz result saved:", response.data);
+				onClose(); // Close the modal after saving
+			})
+			.catch((error) => {
+				console.error("Error saving quiz result:", error);
+			});
+	}
+
 
 	return (
 		<div className='fixed inset-0 bg-black/50 bg-opacity-40 flex items-center justify-center z-50'>
@@ -113,13 +137,10 @@ const QuizModal = ({ onClose }) => {
 								Retry
 							</button>
 							<button
-								onClick={() => {
-									resetQuiz();
-									onClose();
-								}}
+								onClick={handleSave}
 								className='bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-5 rounded-lg font-medium'
 							>
-								Close
+								Save
 							</button>
 						</div>
 					</div>

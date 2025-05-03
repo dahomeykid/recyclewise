@@ -11,7 +11,7 @@ import asyncHandler from "express-async-handler";
 export const getLeaderboard = asyncHandler(async (req, res) => {
     try {
         const leaderboard = await Leaderboard.find()
-            .populate("userId", "name email") // Populate userId with name and email fields from User model
+            .populate("userId", "username email") // Populate userId with name and email fields from User model
             .sort({ score: -1 }) // Sort by score in descending order
             .limit(10); // Limit to top 10 entries
 
