@@ -12,7 +12,6 @@ const Login = () => {
 	const navigate = useNavigate();
 
 	const [error, setError] = useState("");
-	const [success, setSuccess] = useState("");
 
 	// Handle input changes
 	const handleInputChange = (e) => {
