@@ -7,3 +7,5 @@ const router = express.Router();
 
 // Route to get the leaderboard
 router.route('/').get(getLeaderboard).put(updateLeaderboard);
+
+export default router;

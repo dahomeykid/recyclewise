@@ -6,3 +6,5 @@ const router = express.Router();
 
 // Route to get all quiz questions
 router.route('/').get(getQuiz);
+
+export default router;

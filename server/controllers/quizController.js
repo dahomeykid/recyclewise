@@ -1,22 +1,21 @@
-import { log } from 'console';
-import fs from 'fs';
-import path from 'path';
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
 
+export const getQuiz = async (req, res) => {
+	try {
+		const __filename = fileURLToPath(import.meta.url); // Get the resolved path to the file
+		const __dirname = path.dirname(__filename); // Get the name of the directory
+		const quizFilePath = path.join(__dirname, "../utils/quiz.json"); // Path to quiz.json
 
-export const getQuiz = (req, res) => {
-  const quizFilePath = path.join(__dirname, '../utils/quiz.json'); // Adjust the path as necessary
-  log('Quiz file path:', quizFilePath); // Log the path for debugging
-  fs.readFile(quizFilePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Error reading quiz file:', err);
-      return res.status(500).json({ error: 'Failed to read quiz data' });
-    }
-    try {
-      const quizData = JSON.parse(data);
-      res.status(200).json(quizData);
-    } catch (parseError) {
-      console.error('Error parsing quiz data:', parseError);
-      res.status(500).json({ error: 'Failed to parse quiz data' });
-    }
-  });
-}
+		// Read the quiz.json file
+		const data = await fs.readFile(quizFilePath, "utf8");
+		const quizData = JSON.parse(data); // Parse the JSON data
+        
+		// Send the quiz data to the client
+		res.status(200).json(quizData);
+	} catch (error) {
+		console.error("Error reading or parsing quiz file:", error);
+		res.status(500).json({ error: "Failed to retrieve quiz data" });
+	}
+};
