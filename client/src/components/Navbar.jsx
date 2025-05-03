@@ -28,7 +28,7 @@ const Navbar = () => {
 							</li>
 							<li>
 								<Link
-									to='events'
+									to='/events'
 									className='hover:underline'
 								>
 									Events

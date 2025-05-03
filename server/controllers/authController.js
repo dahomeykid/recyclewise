@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import asyncHandler from '../utils/asyncHandler.js';
-import ErrorResponse from '../utils/ErrorResponse.js';
 
 const createToken = (user) => {
   return jwt.sign(
@@ -39,7 +38,9 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id).select('-password');
-  if (!user) throw new ErrorResponse('User not found', 404);
-  res.json(user);
+	const user = await User.findById(req.user.id).select("-password"); // Exclude password
+	if (!user) {
+		return res.status(404).json({ message: "User not found" });
+	}
+	res.status(200).json(user);
 });

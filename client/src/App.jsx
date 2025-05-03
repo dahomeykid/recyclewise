@@ -7,6 +7,7 @@ import Events from "./pages/Events";
 import Admin from "./pages/Admin";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import AuthenticatedUser from "./components/AuthenticatedUser";
 
 function App() {
 	return (
@@ -42,6 +43,10 @@ function App() {
 						<Route
 							path='/recycling-tips'
 							element={<LeaderBoard />}
+						/>
+						<Route
+							path='/me'	
+							element={<AuthenticatedUser />}
 						/>
 						{/* Add more routes as needed */}
 					</Routes>

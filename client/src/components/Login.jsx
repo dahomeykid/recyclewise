@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { useRecycleWise } from "../context/RecycleWiseContext";
 
 const Login = () => {
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
 	});
+
+    const {API_URL} = useRecycleWise()
 
 	const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const Login = () => {
 		e.preventDefault();
 
 		try {
-			const response = await fetch("/api/auth/login", {
+			const response = await fetch(`${API_URL}/auth/login`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(formData),
