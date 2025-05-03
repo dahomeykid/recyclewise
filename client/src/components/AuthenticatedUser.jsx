@@ -47,11 +47,12 @@ const AuthenticatedUser = () => {
 
 	return (
 		<div className='p-4 bg-gray-100 rounded shadow'>
-			<h2 className='text-xl font-bold'>Authenticated User</h2>
-			<p>
+			<h2 className='text-black text-xl font-bold'>Authenticated User</h2>
+			<p className="text-black">
 				<strong>Username:</strong> {user.username}
 			</p>
-			<p>
+			<p className="text-black">
+				<strong>First Name:</strong> {user.firstName}
 				<strong>Email:</strong> {user.email}
 			</p>
 		</div>
