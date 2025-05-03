@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ const Register = () => {
                 setSuccess("Registration successful!");
                 setError("");
                 setFormData({
-                    name: "",
+                    username: "",
                     email: "",
                     password: "",
                     confirmPassword: "",
@@ -56,19 +57,19 @@ const Register = () => {
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-                <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+                <h1 className="text-black text-2xl font-bold mb-6 text-center">Register</h1>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 {success && <p className="text-green-500 mb-4">{success}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-                            Name
+                            Username
                         </label>
                         <input
                             type="text"
                             id="name"
-                            name="name"
-                            value={formData.name}
+                            name="username"
+                            value={formData.username}
                             onChange={handleInputChange}
                             className="w-full border border-gray-300 p-2 rounded"
                             required
@@ -119,12 +120,12 @@ const Register = () => {
                             required
                         />
                     </div>
-                    <button
+                    <Link to="/"
                         type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+                        className="block text-center w-full bg-green-600 text-white py-2 rounded hover:bg-green-800"
                     >
                         Register
-                    </button>
+                    </Link>
                 </form>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 
 import logoWhite from "../assets/logo-white.png";
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -20,7 +21,7 @@ const Footer = () => {
 								href='#about'
 								className='hover:underline'
 							>
-								About
+								About Us
 							</a>
 						</li>
 						<li className='inline-block mx-2'>
@@ -38,6 +39,14 @@ const Footer = () => {
 							>
 								Contact
 							</a>
+						</li>
+						<li className='inline-block mx-2'>
+							<Link	
+								to='/admin'
+								className='hover:underline'
+							>
+								Webmaster
+							</Link>
 						</li>
 					</ul>
 					<p>&copy; 2025 RecycleWise. All rights reserved.</p>
