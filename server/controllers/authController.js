@@ -4,7 +4,12 @@ import asyncHandler from "../utils/asyncHandler.js";
 
 const createToken = (user) => {
 	return jwt.sign(
-		{ id: user._id, username: user.username, email: user.email, role: user.role },
+		{
+			id: user._id,
+			username: user.username,
+			email: user.email,
+			role: user.role,
+		},
 		process.env.JWT_SECRET,
 		{ expiresIn: "1d" }
 	);
@@ -21,22 +26,25 @@ export const register = asyncHandler(async (req, res) => {
 	const user = await User.create({ username, email, password });
 	const token = createToken(user);
 
-	res.status(201).json({ token});
+	res.status(201).json({ token });
 });
 
 // Login a user
 export const login = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
-
+	
+	if (!email || !password) {
+		return res
+			.status(400)
+			.json({ message: "Please provide email and password" });
+	}
 	const user = await User.findOne({ email });
 	if (!user || !(await user.comparePassword(password))) {
 		return res.status(401).json({ message: "Invalid credentials" });
 	}
 
 	const token = createToken(user);
-	res
-		.status(200)
-		.json({ token});
+	res.status(200).json({ token });
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {

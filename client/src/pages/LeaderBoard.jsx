@@ -45,7 +45,7 @@ const LeaderBoard = () => {
 								Please login to play the game
 							</p>
 							<button
-								onClick={() => setShowModal(true)} // turn on the modal
+								onClick={() => (window.location.href = "/login")} // Redirect to login page
 								className='bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition'
 							>
 								Login

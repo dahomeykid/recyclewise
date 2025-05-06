@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+
 import { useRecycleWise } from "../context/RecycleWiseContext";
 
 const Login = () => {
@@ -8,7 +10,7 @@ const Login = () => {
 		password: "",
 	});
 
-    const {API_URL} = useRecycleWise()
+    const {API_URL, setToken} = useRecycleWise()
 
 	const navigate = useNavigate();
 
@@ -24,25 +26,32 @@ const Login = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		try {
-			const response = await fetch(`${API_URL}/auth/login`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(formData),
-			});
+		setError(""); // Reset error message
 
-			if (response.ok) {
-				const data = await response.json();
-				localStorage.setItem("token", data.token); // Save token
-				navigate("/"); // Redirect to home
-			} else {
-				const data = await response.json();
-				setError(data.message || "Login failed");
-			}
-		} catch (err) {
-			setError(`An error occurred. Please try again: ${err.message}`);
+		if (!formData.email || !formData.password) {
+			setError("Please fill in all fields");
+			return;
 		}
-	};
+
+		if (formData.password.length < 6) {
+			setError("Password must be at least 6 characters long");
+			return;
+		}
+
+		try {
+			// Connect to the backend API for login with axios
+			const response = await axios.post(`${API_URL}/auth/login`, formData, {
+				headers: { "Content-Type": "application/json" },
+			});
+			const data = response.data;
+			localStorage.setItem("token", data.token); // Save token
+			setToken(data.token); // Update context state
+			navigate("/"); // Redirect to home
+		} catch (err) {
+			setError(err.response?.data?.message || "Login failed");
+		}
+	}
+
 
 	return (
 		<div className='flex justify-center items-center h-screen bg-gray-100'>

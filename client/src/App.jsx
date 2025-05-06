@@ -28,6 +28,23 @@ const ProtectedRoute = ({ children }) => {
 };
 
 
+// Admin route to be protected
+const AdminRoute = ({ children }) => {
+	const { isAdmin } = useRecycleWise();
+
+	if (!isAdmin) {
+		return (
+			<Navigate
+				to='/'
+				replace
+			/>
+		);
+	}
+
+	return children;
+};
+
+
 function App() {
 	return (
 		<div className='flex flex-col min-h-screen'>
@@ -46,9 +63,9 @@ function App() {
 						<Route
 							path='/admin'
 							element={
-							<ProtectedRoute>
+							<AdminRoute>
 							<Admin />
-							</ProtectedRoute>
+							</AdminRoute>
 							}
 						/>
 						<Route

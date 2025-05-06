@@ -9,7 +9,11 @@ import {
 	FaCalendarCheck,
 } from "react-icons/fa";
 
+import { useRecycleWise } from "../context/RecycleWiseContext";
+
 const Home = () => {
+	const { user } = useRecycleWise(); // Access user from context
+	console.log("User", user); // Log when the component is rendered
 	return (
 		<div className='min-h-screen flex flex-col'>
 		
